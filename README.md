@@ -1,6 +1,6 @@
 # LeucemiaPR
 
-Pipeline de dados sobre internações por leucemia no Paraná, com base nos registros públicos do SUS (2010–2026). O projeto implementa um ecossistema completo de dados, incluindo Data Warehouse com modelagem dimensional e Data Lake com arquitetura medallion, finalizando em um dashboard interativo.
+Análise de internações por leucemia no SUS, com foco em padrões regionais, mortalidade e distribuição demográfica entre 2010 e 2026. O projeto implementa um ecossistema completo de dados, incluindo Data Warehouse com modelagem dimensional e Data Lake com arquitetura medallion, finalizando em um dashboard interativo.
 
 ---
 
