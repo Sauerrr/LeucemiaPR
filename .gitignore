@@ -1,9 +1,5 @@
 # ── Dados gerados em runtime (não versionar arquivos pesados) ─────────────────
 data/raw/
-datalake/bronze/
-datalake/silver/
-logs/
-dw_projeto.duckdb
 
 # ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/

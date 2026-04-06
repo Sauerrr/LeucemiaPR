@@ -7,11 +7,23 @@ Compatível com o padrão log_etapa() exigido no Projeto_Final.ipynb.
 import json
 import datetime
 from pathlib import Path
+import os
 
 import pandas as pd
 
 # ── Estado global do log ─────────────────────────────────────────────────────
 PIPELINE_LOG = []
+
+# Caminho para o diretório raiz do projeto (pai de src/)
+try:
+    # Quando executado como módulo importado
+    PROJECT_ROOT = Path(__file__).parent.parent
+except NameError:
+    # Quando executado diretamente (REPL, notebook, exec)
+    # Assume que o script está em src/ e sobe um nível
+    PROJECT_ROOT = Path(os.getcwd()).parent if Path(os.getcwd()).name == "src" else Path(os.getcwd())
+
+DEFAULT_LOG_PATH = PROJECT_ROOT / "logs" / "pipeline_log.json"
 
 
 def log_etapa(
@@ -82,8 +94,11 @@ def resumo_log() -> None:
     print("=" * 60)
 
 
-def salvar_log(caminho: str = "logs/pipeline_log.json") -> None:
+def salvar_log(caminho: str = None) -> None:
     """Salva o log completo em JSON para auditoria."""
+    if caminho is None:
+        caminho = str(DEFAULT_LOG_PATH)
+    
     Path(caminho).parent.mkdir(parents=True, exist_ok=True)
     with open(caminho, "w", encoding="utf-8") as f:
         json.dump(PIPELINE_LOG, f, ensure_ascii=False, indent=2)
