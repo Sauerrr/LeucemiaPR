@@ -1,0 +1,272 @@
+[
+  {
+    "etapa": "Extract - Arquivos locais encontrados",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 193,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:11.008972",
+    "obs": "Lendo de /Workspace/Users/luanbitencourt57@gmail.com/Faculdade/LeucemiaPR/data/raw"
+  },
+  {
+    "etapa": "Extract - Leitura e filtro por CID (C91–C95)",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 44195,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.256738",
+    "obs": "Colunas selecionadas para as perguntas de negócio"
+  },
+  {
+    "etapa": "ETL - Remover duplicatas",
+    "status": "OK",
+    "qtd_antes": 44195,
+    "qtd_depois": 41668,
+    "removidos": 2527,
+    "timestamp": "2026-04-06T01:46:32.273226",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Converter tipos",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 41668,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.386045",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Tratar nulos e inválidos",
+    "status": "OK",
+    "qtd_antes": 41668,
+    "qtd_depois": 41668,
+    "removidos": 0,
+    "timestamp": "2026-04-06T01:46:32.408332",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Decodificar idade e faixa etária",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 41668,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.436472",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Derivar UF do município",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 41668,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.449771",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Construir dim_tempo",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 193,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.453768",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Construir dim_local",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 640,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.460467",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Construir dim_paciente",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 15,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.465747",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Construir dim_leucemia",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 37,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.470222",
+    "obs": ""
+  },
+  {
+    "etapa": "ETL - Construir fato_internacao",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 41668,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.520809",
+    "obs": ""
+  },
+  {
+    "etapa": "DW - Carregar dim_tempo",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 193,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.557655",
+    "obs": ""
+  },
+  {
+    "etapa": "DW - Carregar dim_local",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 640,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.567495",
+    "obs": ""
+  },
+  {
+    "etapa": "DW - Carregar dim_paciente",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 15,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.574065",
+    "obs": ""
+  },
+  {
+    "etapa": "DW - Carregar dim_leucemia",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 37,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.578386",
+    "obs": ""
+  },
+  {
+    "etapa": "DW - Carregar fato_internacao",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 41668,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.831558",
+    "obs": ""
+  },
+  {
+    "etapa": "DW - Validar dim_tempo",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 193,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.832025",
+    "obs": "DataFrame origem: 193"
+  },
+  {
+    "etapa": "DW - Validar dim_local",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 640,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.832467",
+    "obs": "DataFrame origem: 640"
+  },
+  {
+    "etapa": "DW - Validar dim_paciente",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 15,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.832829",
+    "obs": "DataFrame origem: 15"
+  },
+  {
+    "etapa": "DW - Validar dim_leucemia",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 37,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.833189",
+    "obs": "DataFrame origem: 37"
+  },
+  {
+    "etapa": "DW - Validar fato_internacao",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 41668,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.833672",
+    "obs": "DataFrame origem: 41668"
+  },
+  {
+    "etapa": "DW - Validar SKs nulas",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 0,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.834121",
+    "obs": ""
+  },
+  {
+    "etapa": "ELT - Bronze (LOAD)",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 44195,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:32.960412",
+    "obs": "Salvo em /Workspace/Users/luanbitencourt57@gmail.com/Faculdade/LeucemiaPR/datalake/bronze/bronze.parquet"
+  },
+  {
+    "etapa": "ELT - Silver (TRANSFORM SQL)",
+    "status": "OK",
+    "qtd_antes": 44195,
+    "qtd_depois": 31833,
+    "removidos": 12362,
+    "timestamp": "2026-04-06T01:46:33.107819",
+    "obs": "Limpeza, tipagem e deduplicação via SQL"
+  },
+  {
+    "etapa": "ELT - Gold (gold_evolucao_anual)",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 1037,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:33.238220",
+    "obs": ""
+  },
+  {
+    "etapa": "ELT - Gold (gold_mortalidade_faixa)",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 4,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:33.310716",
+    "obs": ""
+  },
+  {
+    "etapa": "ELT - Gold (gold_municipios)",
+    "status": "OK",
+    "qtd_antes": null,
+    "qtd_depois": 195,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:33.390831",
+    "obs": ""
+  },
+  {
+    "etapa": "Validação cruzada - Internações DW × Gold",
+    "status": "FALHA",
+    "qtd_antes": null,
+    "qtd_depois": null,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:33.395462",
+    "obs": "DW: 41668 | Gold: 31833"
+  },
+  {
+    "etapa": "Validação cruzada - Óbitos DW × Gold",
+    "status": "FALHA",
+    "qtd_antes": null,
+    "qtd_depois": null,
+    "removidos": null,
+    "timestamp": "2026-04-06T01:46:33.395515",
+    "obs": "DW: 2897 | Gold: 2503.0"
+  }
+]
