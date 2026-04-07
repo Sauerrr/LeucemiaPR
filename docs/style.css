@@ -601,9 +601,87 @@ section, footer, header, hr { position: relative; z-index: 1; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* page starts hidden until loader finishes */
+body.loading > *:not(#loader) { visibility: hidden; }
+
 .hero      { animation: fadeUp 0.6s ease both; }
 .kpis      { animation: fadeUp 0.6s 0.08s ease both; }
 .wrap      { animation: fadeUp 0.6s 0.12s ease both; }
+
+/* ---- LOADER ---- */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#loader.done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-inner {
+  width: min(480px, 88vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* progress bar */
+.loader-bar-wrap {
+  height: 2px;
+  background: var(--faint);
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1px;
+}
+
+.loader-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.18s ease;
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* scrolling log lines */
+.loader-lines {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--ok);
+  line-height: 1.9;
+  min-height: 6.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.loader-lines span {
+  display: block;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: linein 0.25s ease forwards;
+}
+
+@keyframes linein {
+  to { opacity: 1; transform: none; }
+}
+
+.loader-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  transition: color 0.3s;
+}
 
 /* ---- RESPONSIVE ---- */
 @media (max-width: 900px) {

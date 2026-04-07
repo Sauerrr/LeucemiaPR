@@ -2,6 +2,52 @@
    LEUCEMIA PR — script.js
    ============================================ */
 
+// ---- LOADER ----
+(function () {
+  document.body.classList.add('loading');
+
+  const loader    = document.getElementById('loader');
+  const bar       = document.getElementById('loaderBar');
+  const lines     = document.getElementById('loaderLines');
+  const labelEl   = document.getElementById('loaderLabel');
+
+  const STEPS = [
+    { pct: 8,   label: 'Conectando ao Databricks…',          log: '[INIT]  Spark session iniciada' },
+    { pct: 20,  label: 'Lendo dataset DATASUS…',             log: '[READ]  leucemia_pr.csv · 148.392 linhas' },
+    { pct: 34,  label: 'Carregando staging Bronze…',         log: '[STAGE] Bronze · Parquet gravado' },
+    { pct: 50,  label: 'Aplicando transformações ETL…',      log: '[ETL]   Duplicatas removidas · −591 reg' },
+    { pct: 63,  label: 'Populando Data Warehouse…',          log: '[DW]    fato_leucemia · 147.801 reg' },
+    { pct: 75,  label: 'Executando pipeline ELT…',           log: '[ELT]   Silver → Gold concluído' },
+    { pct: 88,  label: 'Rodando queries OLAP…',              log: '[OLAP]  5 queries · 0 erros' },
+    { pct: 96,  label: 'Finalizando dashboard…',             log: '[DONE]  Pipeline OK · carregando UI' },
+    { pct: 100, label: 'Pronto.',                            log: null },
+  ];
+
+  const DELAYS = [0, 320, 560, 820, 1100, 1380, 1620, 1860, 2150];
+
+  function addLine(text) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    lines.appendChild(span);
+    // keep max 5 visible lines
+    while (lines.children.length > 5) lines.removeChild(lines.firstChild);
+  }
+
+  STEPS.forEach((step, i) => {
+    setTimeout(() => {
+      bar.style.width = step.pct + '%';
+      labelEl.textContent = step.label;
+      if (step.log) addLine(step.log);
+    }, DELAYS[i]);
+  });
+
+  // dismiss after last step + short pause
+  setTimeout(() => {
+    loader.classList.add('done');
+    document.body.classList.remove('loading');
+  }, DELAYS[DELAYS.length - 1] + 520);
+})();
+
 // ---- THEME ----
 const html = document.documentElement;
 const themeBtn = document.getElementById('themeToggle');
