@@ -95,24 +95,6 @@ document.querySelectorAll('.kpi-n').forEach(el => kpiObs.observe(el));
 const logTs = document.getElementById('logTs');
 if (logTs) logTs.textContent = new Date().toISOString().slice(0, 19);
 
-// ---- STREAMLIT ----
-const loadBtn = document.getElementById('loadBtn');
-const urlInput = document.getElementById('streamlitUrl');
-const stFrame = document.getElementById('stFrame');
-const stPlaceholder = document.getElementById('stPlaceholder');
-
-function loadStreamlit() {
-  let url = urlInput.value.trim();
-  if (!url) return;
-  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-  stFrame.src = url;
-  stFrame.classList.remove('hidden');
-  stPlaceholder.style.display = 'none';
-}
-
-loadBtn?.addEventListener('click', loadStreamlit);
-urlInput?.addEventListener('keydown', e => { if (e.key === 'Enter') loadStreamlit(); });
-
 // ---- PIPELINE LOG SIMULATION ----
 const terminal = document.getElementById('terminal');
 const runBtn = document.getElementById('runBtn');
