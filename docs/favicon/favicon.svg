@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#0f1e30"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0070f3"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06d6a0"/>
+      <stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="21" x2="64" y2="21" stroke="#1a2535" stroke-width="0.6"/>
+  <line x1="0" y1="43" x2="64" y2="43" stroke="#1a2535" stroke-width="0.6"/>
+  <line x1="21" y1="0" x2="21" y2="64" stroke="#1a2535" stroke-width="0.6"/>
+  <line x1="43" y1="0" x2="43" y2="64" stroke="#1a2535" stroke-width="0.6"/>
+
+  <!-- DNA / pipeline helix strands -->
+  <!-- Left strand (blue) -->
+  <path d="M18 10 C18 18, 26 22, 26 32 C26 42, 18 46, 18 54"
+        fill="none" stroke="url(#blue)" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- Right strand (cyan) -->
+  <path d="M46 10 C46 18, 38 22, 38 32 C38 42, 46 46, 46 54"
+        fill="none" stroke="url(#cyan)" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)"/>
+
+  <!-- Cross-rungs (data connections) -->
+  <line x1="18" y1="16" x2="46" y2="16" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="22" y1="24" x2="42" y2="24" stroke="#06d6a0" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="26" y1="32" x2="38" y2="32" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+  <line x1="22" y1="40" x2="42" y2="40" stroke="#06d6a0" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="18" y1="48" x2="46" y2="48" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Center node — data point -->
+  <circle cx="32" cy="32" r="4.5" fill="url(#blue)" filter="url(#glow)"/>
+  <circle cx="32" cy="32" r="2" fill="#ffffff" opacity="0.9"/>
+
+  <!-- Top node -->
+  <circle cx="32" cy="13" r="2.5" fill="#38bdf8" opacity="0.85" filter="url(#glow)"/>
+  <!-- Bottom node -->
+  <circle cx="32" cy="51" r="2.5" fill="#06d6a0" opacity="0.85" filter="url(#glow)"/>
+</svg>
