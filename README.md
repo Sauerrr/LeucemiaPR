@@ -77,20 +77,24 @@ LeucemiaPR/
 ---
 
 ## Como executar
+**1. Utilizar python-3.12**
+```
+python-3.12 para utilização do pysus
+```
 
-**1. Instale as dependências**
+**2. Instale as dependências**
 ```bash
 pip install -r requirements.txt
 ```
 
-**2. Execute o pipeline completo**
+**3. Execute o pipeline completo**
 ```bash
 python main.py
 ```
 
 Isso roda a extração, transformação, carga no DW e geração das tabelas Gold em sequência. O progresso de cada etapa é registrado em `logs/pipeline_log.json`.
 
-**3. Inicie o dashboard**
+**4. Inicie o dashboard**
 ```bash
 streamlit run app.py
 ```

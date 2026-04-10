@@ -29,9 +29,22 @@
 
   <!-- HERO -->
   <section class="hero">
-    <p class="eyebrow">Ecossistema de Dados · Databricks · 2026</p>
+    <div class="eyebrow">
+      <span class="databricks-badge">
+        <span class="db-icon">◈</span> Databricks
+      </span>
+      <span class="eyebrow-text">Ecossistema de Dados · Projeto Final · 2026</span>
+    </div>
     <h1 class="hero-title">Leucemia<br><em>Paraná</em></h1>
     <p class="hero-sub">Pipeline ETL/ELT · Data Warehouse · Data Lake · Analytics</p>
+    <div class="hero-stack">
+      <span class="stack-pill">Apache Spark</span>
+      <span class="stack-pill">DuckDB</span>
+      <span class="stack-pill">Parquet</span>
+      <span class="stack-pill">Delta Lake</span>
+      <span class="stack-pill">Streamlit</span>
+      <span class="stack-pill">Python 3.11</span>
+    </div>
   </section>
 
   <hr class="rule" />
@@ -84,14 +97,14 @@
     <div class="col-block">
       <p class="label">Dashboard interativo</p>
       <div class="st-box">
-        <div class="st-placeholder" id="stPlaceholder">
-          <p class="st-hint">Cole a URL do seu app Streamlit</p>
-          <div class="st-row">
-            <input type="url" id="streamlitUrl" class="st-input" placeholder="https://seu-app.streamlit.app" />
-            <button class="st-btn" id="loadBtn">Carregar</button>
-          </div>
-        </div>
-        <iframe id="stFrame" class="st-frame hidden" title="Streamlit" allow="fullscreen" loading="lazy"></iframe>
+        <iframe
+          id="stFrame"
+          class="st-frame"
+          src="https://leucemia-pr-analysis.streamlit.app?embed=true"
+          title="LeucemiaPR Dashboard"
+          allow="fullscreen"
+          loading="lazy">
+        </iframe>
       </div>
     </div>
 

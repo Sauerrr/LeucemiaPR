@@ -1,5 +1,6 @@
 duckdb==1.5.1
 pandas==2.3.3
 pyarrow==23.0.1
+pysus==1.0.1
 streamlit==1.56.0
 plotly==6.6.0

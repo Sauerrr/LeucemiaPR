@@ -1,6 +1,6 @@
 """
 app.py
-Dashboard LeucemiaPR — análise interativa de internações por leucemia no Paraná (2010-2026).
+Dashboard LeucemiaPR — análise interativa de internações por leucemia no Paraná (2010-2025).
 Execute: streamlit run app.py
 """
 
@@ -56,7 +56,7 @@ def verificar_gold() -> bool:
 st.title("🩺 LeucemiaPR")
 st.markdown(
     """
-    ### Análise de Internações por Leucemia no Paraná (2010–2026)
+    ### Análise de Internações por Leucemia no Paraná (2010–2025)
     
     Dashboard interativo com dados do **SIH/SUS via DATASUS** · CIDs **C91–C95** (leucemias)
     """
@@ -66,7 +66,7 @@ st.divider()
 # ── Verificação dos dados ─────────────────────────────────────────────────────
 if not verificar_gold():
     st.error(
-        "⚠️ **Tabelas Gold não encontradas!**\n\n"
+        "**Tabelas Gold não encontradas!**\n\n"
         "Execute o pipeline primeiro:\n"
         "```bash\n"
         "python main.py\n"
@@ -80,11 +80,16 @@ with st.spinner("Carregando dados..."):
     df_mortal    = carregar(GOLD_MORTAL)
     df_municipio = carregar(GOLD_MUNICIPIO)
 
+# ── Filtrar dados de 2026 em diante (dados incompletos) ──────────────────────
+df_evolucao = df_evolucao[df_evolucao["ano"] < 2026]
+df_mortal = df_mortal[df_mortal["ano"] < 2026]
+df_municipio = df_municipio[df_municipio["ano"] < 2026]
+
 # ── Sidebar com filtros ───────────────────────────────────────────────────────
 with st.sidebar:
     st.header("⚙️ Filtros")
     
-    # Filtro de ano - removendo valores nulos para evitar erro NA ambiguous
+    # Filtro de ano
     anos_disponiveis = sorted(df_evolucao["ano"].dropna().unique())
     ano_min, ano_max = st.select_slider(
         "Período de análise",
@@ -92,7 +97,7 @@ with st.sidebar:
         value=(min(anos_disponiveis), max(anos_disponiveis))
     )
     
-    # Filtro de tipo de leucemia - removendo valores nulos também
+    # Filtro de tipo de leucemia
     tipos = sorted(df_evolucao["tipo_leucemia"].dropna().unique())
     tipos_selecionados = st.multiselect(
         "Tipos de leucemia",
@@ -114,6 +119,12 @@ df_evolucao_filtrado = df_evolucao[
     (df_evolucao["ano"] >= ano_min) &
     (df_evolucao["ano"] <= ano_max) &
     (df_evolucao["tipo_leucemia"].isin(tipos_selecionados))
+]
+
+df_mortal_filtrado = df_mortal[
+    (df_mortal["ano"] >= ano_min) &
+    (df_mortal["ano"] <= ano_max) &
+    (df_mortal["tipo_leucemia"].isin(tipos_selecionados))
 ]
 
 df_municipio_filtrado = df_municipio[
@@ -149,7 +160,7 @@ col3.metric(
 )
 col4.metric(
     "Período Analisado",
-    f"{ano_max - ano_min + 1} anos",
+    f"15 anos",
     delta=f"{ano_min}–{ano_max}",
     delta_color="off"
 )
@@ -157,7 +168,7 @@ col4.metric(
 st.divider()
 
 # ── P1: Evolução anual de internações ─────────────────────────────────────────
-st.subheader("📈 1. Evolução Temporal de Internações")
+st.subheader("Evolução Temporal de Internações")
 
 col_left, col_right = st.columns([3, 1])
 
@@ -240,12 +251,12 @@ with col_right:
 st.divider()
 
 # ── P2: Mortalidade por faixa etária ──────────────────────────────────────────
-st.subheader("💀 2. Taxa de Mortalidade por Faixa Etária")
+st.subheader("Taxa de Mortalidade por Faixa Etária")
 
 ORDEM_FAIXA = ["0-4","5-14","15-29","30-44","45-59","60-74","75+","Não informada"]
 
 mortal_faixa = (
-    df_mortal
+    df_mortal_filtrado
     .groupby("faixa_etaria", as_index=False)
     .agg(internacoes=("internacoes","sum"), obitos=("obitos","sum"))
 )
@@ -283,30 +294,37 @@ with col_esq:
     st.plotly_chart(fig2, use_container_width=True)
 
 with col_dir:
-    st.markdown("**📊 Análise:**")
-    faixa_max = mortal_faixa.loc[mortal_faixa["taxa_pct"].idxmax()]
-    faixa_min = mortal_faixa[mortal_faixa["faixa_etaria"] != "Não informada"]["taxa_pct"].idxmin()
-    faixa_min_data = mortal_faixa.loc[faixa_min]
-    
-    st.info(
-        f"**Maior mortalidade:**\n\n"
-        f"Faixa {faixa_max['faixa_etaria']}: **{faixa_max['taxa_pct']:.1f}%**\n\n"
-        f"{faixa_max['obitos']:.0f} óbitos em {faixa_max['internacoes']:.0f} internações"
-    )
-    
-    st.success(
-        f"**Menor mortalidade:**\n\n"
-        f"Faixa {faixa_min_data['faixa_etaria']}: **{faixa_min_data['taxa_pct']:.1f}%**\n\n"
-        f"{faixa_min_data['obitos']:.0f} óbitos em {faixa_min_data['internacoes']:.0f} internações"
-    )
+    st.markdown("**Análise:**")
+    if len(mortal_faixa) > 0:
+        faixa_max = mortal_faixa.loc[mortal_faixa["taxa_pct"].idxmax()]
+        faixa_min_filtrada = mortal_faixa[mortal_faixa["faixa_etaria"] != "Não informada"]
+        if len(faixa_min_filtrada) > 0:
+            faixa_min = faixa_min_filtrada["taxa_pct"].idxmin()
+            faixa_min_data = mortal_faixa.loc[faixa_min]
+        else:
+            faixa_min_data = faixa_max
+        
+        st.info(
+            f"**Maior mortalidade:**\n\n"
+            f"Faixa {faixa_max['faixa_etaria']}: **{faixa_max['taxa_pct']:.1f}%**\n\n"
+            f"{faixa_max['obitos']:.0f} óbitos em {faixa_max['internacoes']:.0f} internações"
+        )
+        
+        st.success(
+            f"**Menor mortalidade:**\n\n"
+            f"Faixa {faixa_min_data['faixa_etaria']}: **{faixa_min_data['taxa_pct']:.1f}%**\n\n"
+            f"{faixa_min_data['obitos']:.0f} óbitos em {faixa_min_data['internacoes']:.0f} internações"
+        )
+    else:
+        st.warning("Sem dados para as faixas etárias selecionadas")
 
 st.divider()
 
 # ── P3: Tipo de leucemia com mais óbitos ──────────────────────────────────────
-st.subheader("🧬 3. Tipos de Leucemia com Maior Mortalidade")
+st.subheader("Tipos de Leucemia com Maior Mortalidade")
 
 obitos_tipo = (
-    df_mortal
+    df_mortal_filtrado
     .groupby("tipo_leucemia", as_index=False)
     .agg(internacoes=("internacoes","sum"), obitos=("obitos","sum"))
 )
@@ -341,7 +359,7 @@ st.plotly_chart(fig3, use_container_width=True)
 st.divider()
 
 # ── P4: Distribuição por sexo ao longo dos anos ───────────────────────────────
-st.subheader("👥 4. Distribuição por Sexo ao Longo dos Anos")
+st.subheader("Distribuição por Sexo ao Longo dos Anos")
 
 sexo_ano = (
     df_evolucao_filtrado
@@ -385,7 +403,7 @@ with col_masc:
     st.metric(
         "Masculino",
         f"{masc_total:,.0f}",
-        delta=f"{masc_total/total_geral*100:.1f}%",
+        delta=f"{masc_total/total_geral*100:.1f}%" if total_geral > 0 else "0%",
         delta_color="off"
     )
 
@@ -393,7 +411,7 @@ with col_fem:
     st.metric(
         "Feminino",
         f"{fem_total:,.0f}",
-        delta=f"{fem_total/total_geral*100:.1f}%",
+        delta=f"{fem_total/total_geral*100:.1f}%" if total_geral > 0 else "0%",
         delta_color="off"
     )
 
@@ -401,14 +419,14 @@ with col_ign:
     st.metric(
         "Ignorado",
         f"{ign_total:,.0f}",
-        delta=f"{ign_total/total_geral*100:.1f}%",
+        delta=f"{ign_total/total_geral*100:.1f}%" if total_geral > 0 else "0%",
         delta_color="off"
     )
 
 st.divider()
 
 # ── P5: Municípios com mais internações ───────────────────────────────────────
-st.subheader("🏙️ 5. Municípios com Mais Internações")
+st.subheader("Municípios com Mais Internações")
 
 top_n = st.slider(
     "Número de municípios a exibir:",
