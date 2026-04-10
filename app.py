@@ -1,6 +1,6 @@
 """
 app.py
-Dashboard LeucemiaPR — análise interativa de internações por leucemia no Paraná (2010-2026).
+Dashboard LeucemiaPR — análise interativa de internações por leucemia no Paraná (2010-2025).
 Execute: streamlit run app.py
 """
 
@@ -80,7 +80,7 @@ with st.spinner("Carregando dados..."):
     df_mortal    = carregar(GOLD_MORTAL)
     df_municipio = carregar(GOLD_MUNICIPIO)
 
-# ── Filtrar dados de 2026 (dados incompletos) ─────────────────────────────────
+# ── Filtrar dados de 2026 em diante (dados incompletos) ──────────────────────
 df_evolucao = df_evolucao[df_evolucao["ano"] < 2026]
 df_mortal = df_mortal[df_mortal["ano"] < 2026]
 df_municipio = df_municipio[df_municipio["ano"] < 2026]
@@ -89,7 +89,7 @@ df_municipio = df_municipio[df_municipio["ano"] < 2026]
 with st.sidebar:
     st.header("⚙️ Filtros")
     
-    # Filtro de ano - removendo valores nulos para evitar erro NA ambiguous
+    # Filtro de ano
     anos_disponiveis = sorted(df_evolucao["ano"].dropna().unique())
     ano_min, ano_max = st.select_slider(
         "Período de análise",
@@ -97,42 +97,13 @@ with st.sidebar:
         value=(min(anos_disponiveis), max(anos_disponiveis))
     )
     
-    # Filtro de tipo de leucemia - removendo valores nulos também
+    # Filtro de tipo de leucemia
     tipos = sorted(df_evolucao["tipo_leucemia"].dropna().unique())
     tipos_selecionados = st.multiselect(
         "Tipos de leucemia",
         options=tipos,
         default=tipos,
         help="Selecione os tipos para incluir na análise"
-    )
-    
-    # Filtro de municípios
-    codigos_municipios = sorted(df_municipio["cod_municipio"].dropna().unique())
-    municipios_opcoes = {
-        f"{MUNICIPIOS_PR.get(cod, 'Desconhecido')} ({cod})": cod 
-        for cod in codigos_municipios
-    }
-    municipios_opcoes_sorted = dict(sorted(municipios_opcoes.items()))
-    
-    municipios_selecionados_nomes = st.multiselect(
-        "Municípios",
-        options=list(municipios_opcoes_sorted.keys()),
-        default=list(municipios_opcoes_sorted.keys()),
-        help="Pesquise e selecione os municípios para análise"
-    )
-    municipios_selecionados = [
-        municipios_opcoes_sorted[nome] for nome in municipios_selecionados_nomes
-    ]
-    
-    # Filtro de faixas etárias
-    ORDEM_FAIXA = ["0-4", "5-14", "15-29", "30-44", "45-59", "60-74", "75+", "Não informada"]
-    faixas_disponiveis = [f for f in ORDEM_FAIXA if f in df_mortal["faixa_etaria"].unique()]
-    
-    faixas_selecionadas = st.multiselect(
-        "Faixas etárias",
-        options=faixas_disponiveis,
-        default=faixas_disponiveis,
-        help="Selecione as faixas etárias para análise"
     )
     
     st.divider()
@@ -153,15 +124,13 @@ df_evolucao_filtrado = df_evolucao[
 df_mortal_filtrado = df_mortal[
     (df_mortal["ano"] >= ano_min) &
     (df_mortal["ano"] <= ano_max) &
-    (df_mortal["tipo_leucemia"].isin(tipos_selecionados)) &
-    (df_mortal["faixa_etaria"].isin(faixas_selecionadas))
+    (df_mortal["tipo_leucemia"].isin(tipos_selecionados))
 ]
 
 df_municipio_filtrado = df_municipio[
     (df_municipio["ano"] >= ano_min) &
     (df_municipio["ano"] <= ano_max) &
-    (df_municipio["tipo_leucemia"].isin(tipos_selecionados)) &
-    (df_municipio["cod_municipio"].isin(municipios_selecionados))
+    (df_municipio["tipo_leucemia"].isin(tipos_selecionados))
 ]
 
 # ── Métricas resumo ───────────────────────────────────────────────────────────
@@ -191,7 +160,7 @@ col3.metric(
 )
 col4.metric(
     "Período Analisado",
-    f"{ano_max - ano_min + 1} anos",
+    f"15 anos",
     delta=f"{ano_min}–{ano_max}",
     delta_color="off"
 )
@@ -325,7 +294,7 @@ with col_esq:
     st.plotly_chart(fig2, use_container_width=True)
 
 with col_dir:
-    st.markdown("**📊 Análise:**")
+    st.markdown("**Análise:**")
     if len(mortal_faixa) > 0:
         faixa_max = mortal_faixa.loc[mortal_faixa["taxa_pct"].idxmax()]
         faixa_min_filtrada = mortal_faixa[mortal_faixa["faixa_etaria"] != "Não informada"]

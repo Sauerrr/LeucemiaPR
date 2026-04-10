@@ -169,6 +169,7 @@ SQLS_GOLD = {
     "gold_mortalidade_faixa": f"""
         COPY (
             SELECT
+                ano,
                 faixa_etaria,
                 tipo_leucemia,
                 grupo_leucemia,
@@ -177,7 +178,7 @@ SQLS_GOLD = {
                 SUM(obito)                                 AS obitos,
                 ROUND(SUM(obito) * 100.0 / COUNT(*), 2)   AS taxa_mortalidade_pct
             FROM read_parquet('{SILVER_PATH}', union_by_name=true)
-            GROUP BY faixa_etaria, tipo_leucemia, grupo_leucemia, sexo
+            GROUP BY ano,faixa_etaria, tipo_leucemia, grupo_leucemia, sexo
             ORDER BY obitos DESC
         ) TO '{GOLD_PATHS["gold_mortalidade_faixa"]}' (FORMAT PARQUET)
     """,
