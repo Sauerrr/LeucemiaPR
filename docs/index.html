@@ -1,277 +1,278 @@
-<!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leucemia PR — Ecossistema de Dados</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+  <!DOCTYPE html>
+  <html lang="pt-BR" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leucemia PR — Ecossistema de Dados</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="favicon/favicon.svg" type="image/x-icon">
+  </head>
+  <body>
 
-  <!-- LOADER -->
-  <div id="loader">
-    <div class="loader-inner">
-      <div class="loader-bar-wrap">
-        <div class="loader-bar" id="loaderBar"></div>
-      </div>
-      <div class="loader-lines" id="loaderLines"></div>
-      <p class="loader-label" id="loaderLabel">Inicializando pipeline…</p>
-    </div>
-  </div>
-
-  <!-- THEME TOGGLE -->
-  <button class="theme-btn" id="themeToggle" aria-label="Alternar tema">
-    <span class="theme-label" id="themeLabel">Escuro</span>
-    <span class="theme-dot"></span>
-  </button>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="eyebrow">
-      <span class="databricks-badge">
-        <span class="db-icon">◈</span> Databricks
-      </span>
-      <span class="eyebrow-text">Ecossistema de Dados · Projeto Final · 2026</span>
-    </div>
-    <h1 class="hero-title">Leucemia<br><em>Paraná</em></h1>
-    <p class="hero-sub">Pipeline ETL/ELT · Data Warehouse · Data Lake · Analytics</p>
-    <div class="hero-stack">
-      <span class="stack-pill">Apache Spark</span>
-      <span class="stack-pill">DuckDB</span>
-      <span class="stack-pill">Parquet</span>
-      <span class="stack-pill">Delta Lake</span>
-      <span class="stack-pill">Streamlit</span>
-      <span class="stack-pill">Python 3.11</span>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- KPIs -->
-  <section class="kpis">
-    <div class="kpi">
-      <span class="kpi-n" data-target="148392">0</span>
-      <span class="kpi-l">Registros processados</span>
-    </div>
-    <div class="kpi">
-      <span class="kpi-n" data-target="399">0</span>
-      <span class="kpi-l">Municípios cobertos</span>
-    </div>
-    <div class="kpi">
-      <span class="kpi-n" data-target="15">0</span>
-      <span class="kpi-l">Anos de dados</span>
-    </div>
-    <div class="kpi">
-      <span class="kpi-n" data-target="97">0</span>
-      <span class="kpi-l">% completude</span>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- PIPELINE -->
-  <section class="wrap">
-    <p class="label">Pipeline arquitetural</p>
-    <div class="pipeline">
-      <div class="p-step"><span class="p-n">01</span><span class="p-name">Extract</span><span class="p-d">CSV DATASUS</span></div>
-      <span class="p-arrow">→</span>
-      <div class="p-step"><span class="p-n">02</span><span class="p-name">Staging</span><span class="p-d">Bronze · Parquet bruto</span></div>
-      <span class="p-arrow">→</span>
-      <div class="p-step"><span class="p-n">03</span><span class="p-name">Transform</span><span class="p-d">Qualidade · Dimensões</span></div>
-      <span class="p-arrow">→</span>
-      <div class="p-step"><span class="p-n">04</span><span class="p-name">DW</span><span class="p-d">DuckDB · Schema estrela</span></div>
-      <span class="p-arrow">→</span>
-      <div class="p-step"><span class="p-n">05</span><span class="p-name">Data Lake</span><span class="p-d">Silver → Gold · ELT</span></div>
-      <span class="p-arrow">→</span>
-      <div class="p-step"><span class="p-n">06</span><span class="p-name">Analytics</span><span class="p-d">5 queries OLAP</span></div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- STREAMLIT + LOG -->
-  <section class="wrap two-col">
-
-    <div class="col-block">
-      <p class="label">Dashboard interativo</p>
-      <div class="st-box">
-        <iframe
-          id="stFrame"
-          class="st-frame"
-          src="https://leucemia-pr-analysis.streamlit.app?embed=true"
-          title="LeucemiaPR Dashboard"
-          allow="fullscreen"
-          loading="lazy">
-        </iframe>
-      </div>
-    </div>
-
-    <div class="col-block">
-      <div class="log-top">
-        <p class="label">Pipeline log</p>
-        <button class="run-btn" id="runBtn">↺ Simular run</button>
-      </div>
-      <div class="terminal" id="terminal">
-        <div class="t-line ok">[OK]  Extract · Leitura do dataset ········ 148.392 reg</div>
-        <div class="t-line ok">[OK]  Staging · Bronze salvo ············· 148.392 reg</div>
-        <div class="t-line ok">[OK]  ETL · Remover duplicatas ··········· 147.801 reg  (−591)</div>
-        <div class="t-line ok">[OK]  ETL · Tratar nulos ················· 147.801 reg</div>
-        <div class="t-line ok">[OK]  ETL · Normalizar datas ············· 147.801 reg</div>
-        <div class="t-line ok">[OK]  DW · dim_municipio ················· 399 reg</div>
-        <div class="t-line ok">[OK]  DW · dim_diagnostico ··············· 12 reg</div>
-        <div class="t-line ok">[OK]  DW · dim_tempo ···················· 5.844 reg</div>
-        <div class="t-line ok">[OK]  DW · fato_leucemia ················ 147.801 reg</div>
-        <div class="t-line ok">[OK]  ELT · Bronze → Silver ············· 147.801 reg</div>
-        <div class="t-line ok">[OK]  ELT · Silver → Gold ··············· 147.801 reg</div>
-        <div class="t-line ok">[OK]  Validação final ·················· PASS</div>
-        <div class="t-line ts">Concluído · 0 falhas · <span id="logTs"></span></div>
-        <span class="t-cursor">█</span>
-      </div>
-    </div>
-
-  </section>
-
-  <hr class="rule" />
-
-  <!-- SCHEMA ESTRELA -->
-  <section class="wrap">
-    <p class="label">Data Warehouse · Schema estrela · DuckDB</p>
-    <div class="schema">
-      <div class="s-dim" style="grid-area:d1">
-        <p class="s-name">dim_municipio</p>
-        <p class="s-col pk">sk_municipio</p>
-        <p class="s-col">cd_municipio</p>
-        <p class="s-col">nm_municipio</p>
-        <p class="s-col">ds_regional</p>
-        <p class="s-col">qt_populacao</p>
-      </div>
-      <div class="s-dim" style="grid-area:d2">
-        <p class="s-name">dim_diagnostico</p>
-        <p class="s-col pk">sk_diagnostico</p>
-        <p class="s-col">cd_cid10</p>
-        <p class="s-col">ds_tipo_leucemia</p>
-        <p class="s-col">ds_classificacao</p>
-      </div>
-      <div class="s-fato" style="grid-area:ft">
-        <p class="s-fato-label">⭐ fato_leucemia</p>
-        <p class="s-col pk">sk_leucemia</p>
-        <p class="s-col fk">sk_municipio</p>
-        <p class="s-col fk">sk_diagnostico</p>
-        <p class="s-col fk">sk_tempo</p>
-        <p class="s-col fk">sk_paciente</p>
-        <p class="s-col">qt_casos</p>
-        <p class="s-col">vl_idade</p>
-        <p class="s-col">ds_sexo</p>
-      </div>
-      <div class="s-dim" style="grid-area:d3">
-        <p class="s-name">dim_tempo</p>
-        <p class="s-col pk">sk_tempo</p>
-        <p class="s-col">dt_data</p>
-        <p class="s-col">nr_ano</p>
-        <p class="s-col">nr_mes</p>
-        <p class="s-col">ds_trimestre</p>
-      </div>
-      <div class="s-dim" style="grid-area:d4">
-        <p class="s-name">dim_paciente</p>
-        <p class="s-col pk">sk_paciente</p>
-        <p class="s-col">ds_faixa_etaria</p>
-        <p class="s-col">ds_sexo</p>
-        <p class="s-col">ds_raca_cor</p>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- DATA LAKE -->
-  <section class="wrap">
-    <p class="label">Data Lake · Camadas ELT</p>
-    <div class="lake">
-      <div class="layer" data-layer="bronze">
-        <div class="layer-head">
-          <span class="layer-name">Bronze</span>
-          <span class="layer-sz">48 MB · Parquet</span>
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="loader-inner">
+        <div class="loader-bar-wrap">
+          <div class="loader-bar" id="loaderBar"></div>
         </div>
-        <p class="layer-desc">Dado bruto e imutável. Metadados: <code>_source_file</code>, <code>_ingested_at</code>, <code>_batch_id</code>.</p>
-        <div class="bar-track"><div class="bar-fill" style="--w:100%"></div></div>
-      </div>
-      <div class="layer" data-layer="silver">
-        <div class="layer-head">
-          <span class="layer-name">Silver</span>
-          <span class="layer-sz">31 MB · Parquet</span>
-        </div>
-        <p class="layer-desc">Limpo via SQL ELT. Deduplicado, tipos corrigidos, nulos tratados, campos padronizados.</p>
-        <div class="bar-track"><div class="bar-fill" style="--w:65%"></div></div>
-      </div>
-      <div class="layer" data-layer="gold">
-        <div class="layer-head">
-          <span class="layer-name">Gold</span>
-          <span class="layer-sz">8 MB · Parquet</span>
-        </div>
-        <p class="layer-desc">Agregações analíticas prontas para consumo. Incidência por município, evolução temporal.</p>
-        <div class="bar-track"><div class="bar-fill" style="--w:17%"></div></div>
+        <div class="loader-lines" id="loaderLines"></div>
+        <p class="loader-label" id="loaderLabel">Inicializando pipeline…</p>
       </div>
     </div>
-  </section>
 
-  <hr class="rule" />
+    <!-- THEME TOGGLE -->
+    <button class="theme-btn" id="themeToggle" aria-label="Alternar tema">
+      <span class="theme-label" id="themeLabel">Escuro</span>
+      <span class="theme-dot"></span>
+    </button>
 
-  <!-- QUERIES OLAP -->
-  <section class="wrap">
-    <p class="label">Analytics · 5 Queries OLAP</p>
-    <div class="queries">
-      <div class="query">
-        <span class="q-n">Q1</span>
-        <div>
-          <p class="q-title">Evolução temporal por ano</p>
-          <p class="q-desc">Série histórica de incidência com variação YoY.</p>
-        </div>
-        <span class="q-chip">GROUP BY</span>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="eyebrow">
+        <span class="databricks-badge">
+          <span class="db-icon">◈</span> Databricks
+        </span>
+        <span class="eyebrow-text">Ecossistema de Dados · Projeto Final · 2026</span>
       </div>
-      <div class="query">
-        <span class="q-n">Q2</span>
-        <div>
-          <p class="q-title">Top 10 municípios por incidência</p>
-          <p class="q-desc">Ranking normalizado por 100 mil habitantes.</p>
-        </div>
-        <span class="q-chip">RANK · JOIN</span>
+      <h1 class="hero-title">Leucemia<br><em>Paraná SIHSUS</em></h1>
+      <p class="hero-sub">Pipeline ETL/ELT · Data Warehouse · Data Lake · Analytics</p>
+      <div class="hero-stack">
+        <span class="stack-pill">Apache Spark</span>
+        <span class="stack-pill">DuckDB</span>
+        <span class="stack-pill">Parquet</span>
+        <span class="stack-pill">Delta Lake</span>
+        <span class="stack-pill">Streamlit</span>
+        <span class="stack-pill">Python 3.11</span>
       </div>
-      <div class="query">
-        <span class="q-n">Q3</span>
-        <div>
-          <p class="q-title">Tipo de leucemia por sexo</p>
-          <p class="q-desc">Proporção LLA vs LMA vs LLC por gênero.</p>
-        </div>
-        <span class="q-chip">PIVOT · CTE</span>
-      </div>
-      <div class="query">
-        <span class="q-n">Q4</span>
-        <div>
-          <p class="q-title">Faixa etária mais afetada</p>
-          <p class="q-desc">Perfil epidemiológico por subtipo de leucemia.</p>
-        </div>
-        <span class="q-chip">WINDOW FN</span>
-      </div>
-      <div class="query">
-        <span class="q-n">Q5</span>
-        <div>
-          <p class="q-title">Sazonalidade trimestral</p>
-          <p class="q-desc">Padrão de diagnósticos por trimestre e região.</p>
-        </div>
-        <span class="q-chip">ROLLUP</span>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <hr class="rule" />
+    <hr class="rule" />
 
-  <footer class="footer">
-    <span>Databricks · DuckDB · Parquet · Streamlit · Python</span>
-    <span>Projeto Final · 2026</span>
-  </footer>
+    <!-- KPIs -->
+    <section class="kpis">
+      <div class="kpi">
+        <span class="kpi-n" data-target="148392">0</span>
+        <span class="kpi-l">Registros processados</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-n" data-target="399">0</span>
+        <span class="kpi-l">Municípios cobertos</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-n" data-target="15">0</span>
+        <span class="kpi-l">Anos de dados</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-n" data-target="97">0</span>
+        <span class="kpi-l">% completude</span>
+      </div>
+    </section>
 
-  <script src="script.js"></script>
-</body>
-</html>
+    <hr class="rule" />
+
+    <!-- PIPELINE -->
+    <section class="wrap">
+      <p class="label">Pipeline arquitetural</p>
+      <div class="pipeline">
+        <div class="p-step"><span class="p-n">01</span><span class="p-name">Extract</span><span class="p-d">CSV DATASUS</span></div>
+        <span class="p-arrow">→</span>
+        <div class="p-step"><span class="p-n">02</span><span class="p-name">Staging</span><span class="p-d">Bronze · Parquet bruto</span></div>
+        <span class="p-arrow">→</span>
+        <div class="p-step"><span class="p-n">03</span><span class="p-name">Transform</span><span class="p-d">Qualidade · Dimensões</span></div>
+        <span class="p-arrow">→</span>
+        <div class="p-step"><span class="p-n">04</span><span class="p-name">DW</span><span class="p-d">DuckDB · Schema estrela</span></div>
+        <span class="p-arrow">→</span>
+        <div class="p-step"><span class="p-n">05</span><span class="p-name">Data Lake</span><span class="p-d">Silver → Gold · ELT</span></div>
+        <span class="p-arrow">→</span>
+        <div class="p-step"><span class="p-n">06</span><span class="p-name">Analytics</span><span class="p-d">5 queries OLAP</span></div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- STREAMLIT + LOG -->
+    <section class="wrap two-col">
+
+      <div class="col-block">
+        <p class="label">Dashboard interativo</p>
+        <div class="st-box">
+          <iframe
+            id="stFrame"
+            class="st-frame"
+            src="https://leucemia-pr-analysis.streamlit.app?embed=true"
+            title="LeucemiaPR Dashboard"
+            allow="fullscreen"
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+
+      <div class="col-block">
+        <div class="log-top">
+          <p class="label">Pipeline log</p>
+          <button class="run-btn" id="runBtn">↺ Simular run</button>
+        </div>
+        <div class="terminal" id="terminal">
+          <div class="t-line ok">[OK]  Extract · Leitura do dataset ········ 148.392 reg</div>
+          <div class="t-line ok">[OK]  Staging · Bronze salvo ············· 148.392 reg</div>
+          <div class="t-line ok">[OK]  ETL · Remover duplicatas ··········· 147.801 reg  (−591)</div>
+          <div class="t-line ok">[OK]  ETL · Tratar nulos ················· 147.801 reg</div>
+          <div class="t-line ok">[OK]  ETL · Normalizar datas ············· 147.801 reg</div>
+          <div class="t-line ok">[OK]  DW · dim_municipio ················· 399 reg</div>
+          <div class="t-line ok">[OK]  DW · dim_diagnostico ··············· 12 reg</div>
+          <div class="t-line ok">[OK]  DW · dim_tempo ···················· 5.844 reg</div>
+          <div class="t-line ok">[OK]  DW · fato_leucemia ················ 147.801 reg</div>
+          <div class="t-line ok">[OK]  ELT · Bronze → Silver ············· 147.801 reg</div>
+          <div class="t-line ok">[OK]  ELT · Silver → Gold ··············· 147.801 reg</div>
+          <div class="t-line ok">[OK]  Validação final ·················· PASS</div>
+          <div class="t-line ts">Concluído · 0 falhas · <span id="logTs"></span></div>
+          <span class="t-cursor">█</span>
+        </div>
+      </div>
+
+    </section>
+
+    <hr class="rule" />
+
+    <!-- SCHEMA ESTRELA -->
+    <section class="wrap">
+      <p class="label">Data Warehouse · Schema estrela · DuckDB</p>
+      <div class="schema">
+        <div class="s-dim" style="grid-area:d1">
+          <p class="s-name">dim_municipio</p>
+          <p class="s-col pk">sk_municipio</p>
+          <p class="s-col">cd_municipio</p>
+          <p class="s-col">nm_municipio</p>
+          <p class="s-col">ds_regional</p>
+          <p class="s-col">qt_populacao</p>
+        </div>
+        <div class="s-dim" style="grid-area:d2">
+          <p class="s-name">dim_diagnostico</p>
+          <p class="s-col pk">sk_diagnostico</p>
+          <p class="s-col">cd_cid10</p>
+          <p class="s-col">ds_tipo_leucemia</p>
+          <p class="s-col">ds_classificacao</p>
+        </div>
+        <div class="s-fato" style="grid-area:ft">
+          <p class="s-fato-label">⭐ fato_leucemia</p>
+          <p class="s-col pk">sk_leucemia</p>
+          <p class="s-col fk">sk_municipio</p>
+          <p class="s-col fk">sk_diagnostico</p>
+          <p class="s-col fk">sk_tempo</p>
+          <p class="s-col fk">sk_paciente</p>
+          <p class="s-col">qt_casos</p>
+          <p class="s-col">vl_idade</p>
+          <p class="s-col">ds_sexo</p>
+        </div>
+        <div class="s-dim" style="grid-area:d3">
+          <p class="s-name">dim_tempo</p>
+          <p class="s-col pk">sk_tempo</p>
+          <p class="s-col">dt_data</p>
+          <p class="s-col">nr_ano</p>
+          <p class="s-col">nr_mes</p>
+          <p class="s-col">ds_trimestre</p>
+        </div>
+        <div class="s-dim" style="grid-area:d4">
+          <p class="s-name">dim_paciente</p>
+          <p class="s-col pk">sk_paciente</p>
+          <p class="s-col">ds_faixa_etaria</p>
+          <p class="s-col">ds_sexo</p>
+          <p class="s-col">ds_raca_cor</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- DATA LAKE -->
+    <section class="wrap">
+      <p class="label">Data Lake · Camadas ELT</p>
+      <div class="lake">
+        <div class="layer" data-layer="bronze">
+          <div class="layer-head">
+            <span class="layer-name">Bronze</span>
+            <span class="layer-sz">48 MB · Parquet</span>
+          </div>
+          <p class="layer-desc">Dado bruto e imutável. Metadados: <code>_source_file</code>, <code>_ingested_at</code>, <code>_batch_id</code>.</p>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%"></div></div>
+        </div>
+        <div class="layer" data-layer="silver">
+          <div class="layer-head">
+            <span class="layer-name">Silver</span>
+            <span class="layer-sz">31 MB · Parquet</span>
+          </div>
+          <p class="layer-desc">Limpo via SQL ELT. Deduplicado, tipos corrigidos, nulos tratados, campos padronizados.</p>
+          <div class="bar-track"><div class="bar-fill" style="--w:65%"></div></div>
+        </div>
+        <div class="layer" data-layer="gold">
+          <div class="layer-head">
+            <span class="layer-name">Gold</span>
+            <span class="layer-sz">8 MB · Parquet</span>
+          </div>
+          <p class="layer-desc">Agregações analíticas prontas para consumo. Incidência por município, evolução temporal.</p>
+          <div class="bar-track"><div class="bar-fill" style="--w:17%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- QUERIES OLAP -->
+    <section class="wrap">
+      <p class="label">Analytics · 5 Queries OLAP</p>
+      <div class="queries">
+        <div class="query">
+          <span class="q-n">Q1</span>
+          <div>
+            <p class="q-title">Evolução temporal por ano</p>
+            <p class="q-desc">Série histórica de incidência com variação YoY.</p>
+          </div>
+          <span class="q-chip">GROUP BY</span>
+        </div>
+        <div class="query">
+          <span class="q-n">Q2</span>
+          <div>
+            <p class="q-title">Top 10 municípios por incidência</p>
+            <p class="q-desc">Ranking normalizado por 100 mil habitantes.</p>
+          </div>
+          <span class="q-chip">RANK · JOIN</span>
+        </div>
+        <div class="query">
+          <span class="q-n">Q3</span>
+          <div>
+            <p class="q-title">Tipo de leucemia por sexo</p>
+            <p class="q-desc">Proporção LLA vs LMA vs LLC por gênero.</p>
+          </div>
+          <span class="q-chip">PIVOT · CTE</span>
+        </div>
+        <div class="query">
+          <span class="q-n">Q4</span>
+          <div>
+            <p class="q-title">Faixa etária mais afetada</p>
+            <p class="q-desc">Perfil epidemiológico por subtipo de leucemia.</p>
+          </div>
+          <span class="q-chip">WINDOW FN</span>
+        </div>
+        <div class="query">
+          <span class="q-n">Q5</span>
+          <div>
+            <p class="q-title">Sazonalidade trimestral</p>
+            <p class="q-desc">Padrão de diagnósticos por trimestre e região.</p>
+          </div>
+          <span class="q-chip">ROLLUP</span>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <footer class="footer">
+      <span>Databricks · DuckDB · Parquet · Streamlit · Python</span>
+      <span>Projeto Final · 2026</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
