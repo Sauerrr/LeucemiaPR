@@ -4,6 +4,13 @@ Análise de internações por leucemia no SUS, com foco em padrões regionais, m
 
 ---
 
+## 🔗 Links
+
+* **Landing Page:** [https://luan-bs.github.io/LeucemiaPR/](https://luan-bs.github.io/LeucemiaPR/)
+* **Dashboard (Streamlit):** [https://leucemia-pr-analysis.streamlit.app/](https://leucemia-pr-analysis.streamlit.app/)
+
+---
+
 ## Fonte dos dados
 
 **Sistema de Informações Hospitalares do SUS (SIH/SUS)**
@@ -44,6 +51,43 @@ app.py              Dashboard Streamlit
 
 ---
 
+## Problemas de Qualidade Tratados
+
+Durante o processo ETL, foram identificados e corrigidos diversos problemas de qualidade nos dados do DATASUS:
+
+### **1. Duplicatas (2.527 registros — 5,7% do dataset)**
+* Registros idênticos em todas as colunas
+* **Solução:** Remoção via `drop_duplicates()` e `QUALIFY ROW_NUMBER()` no SQL
+
+### **2. Códigos de Sexo Inconsistentes**
+* Valores esperados: 1 (Masculino), 2 (Feminino)
+* **Problema:** Registros com código "0" ou valores inválidos
+* **Solução:** Mapeamento robusto com categoria "Ignorado" para códigos fora do padrão
+
+### **3. Valores Nulos em Campos Críticos**
+* Registros sem ano, mês ou CID principal (impossíveis de analisar)
+* **Solução:** Remoção apenas de registros sem `ANO_CMPT`, `MES_CMPT` ou `DIAG_PRINC`
+
+### **4. Dias de Permanência Negativos**
+* Valores negativos ou nulos na coluna `DIAS_PERM`
+* **Solução:** `clip(lower=0)` para garantir valores >= 0, preenchendo nulos com 0
+
+### **5. CIDs com Espaços e Maiúsculas/Minúsculas**
+* Diagnósticos registrados como "c920", " C920", "C920 "
+* **Solução:** Normalização via `UPPER(TRIM())` para garantir consistência
+
+### **6. Códigos de Município Incompletos**
+* Municípios com códigos de 4 ou 5 dígitos ao invés de 6
+* **Solução:** Preenchimento com zeros à esquerda via `zfill(6)` / `LPAD()`
+
+### **7. Registros Fora do Escopo Geográfico**
+* Internações de residentes de outros estados no PR
+* **Solução:** Mapeamento UF via 2 primeiros dígitos do município, categoria "Outro" para estados não mapeados
+
+**Resultado:** De 44.195 registros brutos, 41.668 foram validados e carregados (94,3% de aproveitamento).
+
+---
+
 ## Estrutura do repositório
 
 ```
@@ -77,24 +121,20 @@ LeucemiaPR/
 ---
 
 ## Como executar
-**1. Utilizar python-3.12**
-```
-python-3.12 para utilização do pysus
-```
 
-**2. Instale as dependências**
+**1. Instale as dependências**
 ```bash
 pip install -r requirements.txt
 ```
 
-**3. Execute o pipeline completo**
+**2. Execute o pipeline completo**
 ```bash
 python main.py
 ```
 
 Isso roda a extração, transformação, carga no DW e geração das tabelas Gold em sequência. O progresso de cada etapa é registrado em `logs/pipeline_log.json`.
 
-**4. Inicie o dashboard**
+**3. Inicie o dashboard**
 ```bash
 streamlit run app.py
 ```
@@ -111,7 +151,10 @@ streamlit run app.py
 | Armazenamento | Parquet (PyArrow) |
 | Data Warehouse | DuckDB |
 | Data Lake | DuckDB + Parquet (medallion) |
+| Processamento SQL | DuckDB |
+| Desenvolvimento | Databricks Community Edition |
 | Dashboard | Streamlit |
+| Deploy | Streamlit Cloud |
 | Linguagem | Python 3.11+ |
 
 ---
