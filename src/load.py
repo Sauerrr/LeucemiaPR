@@ -12,19 +12,14 @@ import pandas as pd
 
 from .monitor import log_etapa
 
-# Caminho para o diretório raiz do projeto (pai de src/)
 try:
-    # Quando executado como módulo importado
     PROJECT_ROOT = Path(__file__).parent.parent
 except NameError:
-    # Quando executado diretamente (REPL, notebook, exec)
-    # Assume que o script está em src/ e sobe um nível
     PROJECT_ROOT = Path(os.getcwd()).parent if Path(os.getcwd()).name == "src" else Path(os.getcwd())
 
 DW_PATH = str(PROJECT_ROOT / "dw_projeto.duckdb")
 
 
-# ── DDL ───────────────────────────────────────────────────────────────────────
 DDL = {
     "dim_tempo": """
         CREATE TABLE IF NOT EXISTS dim_tempo (
@@ -77,7 +72,6 @@ DDL = {
     """,
 }
 
-# Ordem de carga — dimensões antes da fato
 ORDEM_CARGA = [
     "dim_tempo",
     "dim_local",
@@ -87,12 +81,11 @@ ORDEM_CARGA = [
 ]
 
 
-# ── Funções ───────────────────────────────────────────────────────────────────
 def conectar() -> duckdb.DuckDBPyConnection:
     """Abre (ou cria) o arquivo DuckDB."""
     Path(DW_PATH).parent.mkdir(parents=True, exist_ok=True)
     conn = duckdb.connect(DW_PATH)
-    print(f"DW conectado: {DW_PATH}")
+    log_etapa("DW - Conectar banco", "OK", obs=DW_PATH)
     return conn
 
 
@@ -100,17 +93,14 @@ def criar_tabelas(conn: duckdb.DuckDBPyConnection) -> None:
     """Cria todas as tabelas do DW se ainda não existirem."""
     for tabela, ddl in DDL.items():
         conn.execute(ddl)
-    print("Tabelas criadas (ou já existentes).")
+    log_etapa("DW - Criar schema", "OK", qtd_depois=len(DDL), obs="5 tabelas")
 
 
 def limpar_tabelas(conn: duckdb.DuckDBPyConnection) -> None:
-    """
-    Limpa todas as tabelas antes de recarregar.
-    Ordem inversa para respeitar as foreign keys.
-    """
+    """Limpa todas as tabelas antes de recarregar (ordem inversa para respeitar FKs)."""
     for tabela in reversed(ORDEM_CARGA):
         conn.execute(f"DELETE FROM {tabela}")
-    print("Tabelas limpas para recarga.")
+    log_etapa("DW - Limpar tabelas", "OK", obs="Preparado para recarga")
 
 
 def carregar_tabela(
@@ -121,8 +111,8 @@ def carregar_tabela(
     """Carrega um DataFrame em uma tabela do DW via view temporária."""
     conn.register("_df_temp", df)
     
-    # Para fato_internacao, gerar sk_fato com ROW_NUMBER()
     if nome == "fato_internacao":
+        # Gerar sk_fato com ROW_NUMBER()
         conn.execute(f"""
             INSERT INTO {nome} 
             SELECT 
@@ -132,7 +122,7 @@ def carregar_tabela(
             FROM _df_temp
         """)
     else:
-        # Para dimensões, inserir diretamente (já têm SK)
+        # Dimensões já têm SK
         conn.execute(f"INSERT INTO {nome} SELECT * FROM _df_temp")
     
     conn.unregister("_df_temp")
@@ -146,9 +136,7 @@ def validar(conn: duckdb.DuckDBPyConnection, tabelas: dict) -> None:
     Validação pós-carga:
       - Contagem de cada tabela bate com o DataFrame de origem
       - Fato não possui SKs nulas
-      - Total de óbitos na fato é consistente
     """
-    print("\nValidando DW...")
     ok = True
 
     for nome, df in tabelas.items():
@@ -176,13 +164,10 @@ def validar(conn: duckdb.DuckDBPyConnection, tabelas: dict) -> None:
         ok = False
     log_etapa("DW - Validar SKs nulas", status_nulos, qtd_depois=nulos)
 
-    if ok:
-        print("✅ Todas as validações passaram.")
-    else:
-        print("❌ Algumas validações falharam — revisar logs.")
+    if not ok:
+        log_etapa("DW - Validação geral", "FALHA", obs="Revisar logs anteriores")
 
 
-# ── Execução ──────────────────────────────────────────────────────────────────
 def run(tabelas: tuple) -> duckdb.DuckDBPyConnection:
     """
     Recebe as 5 tabelas (dim_tempo, dim_local, dim_paciente, dim_leucemia, fato)
@@ -191,7 +176,6 @@ def run(tabelas: tuple) -> duckdb.DuckDBPyConnection:
     """
     dim_tempo, dim_local, dim_paciente, dim_leucemia, fato = tabelas
 
-    # Mapear para dict
     tabelas_dict = {
         "dim_tempo": dim_tempo,
         "dim_local": dim_local,
@@ -204,7 +188,6 @@ def run(tabelas: tuple) -> duckdb.DuckDBPyConnection:
     criar_tabelas(conn)
     limpar_tabelas(conn)
 
-    # Carregar na ordem correta
     for nome in ORDEM_CARGA:
         carregar_tabela(conn, nome, tabelas_dict[nome])
 
