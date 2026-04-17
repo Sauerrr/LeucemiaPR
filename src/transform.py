@@ -79,7 +79,7 @@ def tratar_nulos(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=["ANO_CMPT", "MES_CMPT", "DIAG_PRINC"])
 
     # Sexo ignorado mantido como categoria "Ignorado"
-    df["SEXO"] = df["SEXO"].replace({"0": "Ignorado", "1": "Masculino", "3": "Feminino"})
+    df["SEXO"] = df["SEXO"].replace({"0": "Ignorado", "1": "Masculino", "2": "Feminino"})
     df["SEXO"] = df["SEXO"].where(df["SEXO"].isin(["Masculino","Feminino","Ignorado"]), "Ignorado")
 
     # Dias de permanência negativos ou nulos → 0
